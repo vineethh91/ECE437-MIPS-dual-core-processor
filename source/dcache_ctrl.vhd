@@ -181,12 +181,12 @@ begin
         nextDumpIndexCount <= std_logic_vector(unsigned(dumpIndexCount) + 1);
         nextState <= DUMP_WAY0_WORD0;
       elsif((arbiterMemWait = '0') and (dumpIndexCount = "1111")) then
-        nextState <= DUMP_HIT_COUNT;
+        nextState <= DUMP_FINISHED;--DUMP_HIT_COUNT;
       elsif((WAY1_Dirty = '0') and (dumpIndexCount /= "1111")) then
         nextDumpIndexCount <= std_logic_vector(unsigned(dumpIndexCount) + 1);
         nextState <= DUMP_WAY0_WORD0;
       elsif((WAY1_Dirty = '0') and (dumpIndexCount = "1111")) then
-        nextState <= DUMP_HIT_COUNT;
+        nextState <= DUMP_FINISHED;--DUMP_HIT_COUNT;
       end if;
       
     when DUMP_HIT_COUNT => 

@@ -31,9 +31,11 @@ entity memoryArbiter is
                 wren            : out std_logic ;
                 rden            : out std_logic ;
                 latency_override: out std_logic ; 
+                dataMemRead     : out std_logic;
+                dataMemWrite    : out std_logic;
+                instructionMemRead : out std_logic;
                 q               : in std_logic_vector (31 DOWNTO 0);
                 memstate        : in std_logic_vector (1 DOWNTO 0)
-
     );
 
 end memoryArbiter;
@@ -133,9 +135,14 @@ begin
      aiMemWait <= '0' when ( (state = FETCH_INSTRUCTION_BUSY) and memstate = "10")  else '1' when ((state = LOAD_WORD_BUSY) or (state = STORE_WORD_BUSY)) else '0' when (aiMemRead = '0') else '1' when ((state = IDLE) or ((state = FETCH_INSTRUCTION_BUSY) and memstate /= "10")) else '0';
 
     adMemWait <= '1' when (((state = IDLE) and ((adMemRead = '1') or (adMemWrite = '1'))) or (state = FETCH_INSTRUCTION_BUSY) or ( (state = LOAD_WORD_BUSY) and (memstate /= "10")) or ( (state = STORE_WORD_BUSY) and (memstate /= "10") ) ) else '0';
-    address <= adMemAddr(15 downto 0) when (((state = IDLE) and ((adMemRead = '1') or (adMemWrite = '1'))) or (state = LOAD_WORD_BUSY) or (state = STORE_WORD_BUSY)) else aiMemAddr(15 downto 0);
-    data <= adMemDataWrite;
+    address <= adMemAddr(15 downto 0) when (((state = IDLE) and ((adMemRead = '1') or (adMemWrite = '1'))) or (state = LOAD_WORD_BUSY) or (state = STORE_WORD_BUSY)) else aiMemAddr(15 downto 0) when (aiMemRead = '1') else x"3FFF";
+    data <= adMemDataWrite when ((state = STORE_WORD_BUSY) or ((state = IDLE) and (adMemWrite = '1'))) else x"00000000";
     wren <= '1' when ((state = STORE_WORD_BUSY) or ((state = IDLE) and (adMemWrite = '1'))) else '0';
 --    rden <= '0' when ((state = STORE_WORD_BUSY) or ((state = IDLE) and (adMemWrite = '1'))) else '1';
     rden <= '1' when ((state = FETCH_INSTRUCTION_BUSY) or (state = LOAD_WORD_BUSY) or ((state = IDLE) and ((adMemRead = '1') or (aiMemRead = '1')))) else '0';
+    
+     dataMemRead <= adMemRead;
+     dataMemWrite <= adMemWrite;
+     instructionMemRead <= aiMemRead;
+     
 end arch_memoryArbiter;

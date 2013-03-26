@@ -97,7 +97,7 @@ begin
     prevMemStageMemWrite <= MEMStage_memWrite;
     prevMemStageMemRead <= MEMStage_memRead;
     hitCounterEn <= nextHitCounterEn;
-    if(LLSC_flag = '1') then
+    if((LLSC_flag = '1') and (MEMStage_memRead = '1')) then
       linkRegister <= MEMStage_Addr;
     end if;
 	end if;
