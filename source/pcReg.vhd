@@ -3,6 +3,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 entity pcReg is
+  generic ( resetPC : std_logic_vector(31 downto 0) := x"00000000" );
     port(
     clk: in std_logic;
     rst_n: in std_logic;
@@ -19,8 +20,8 @@ begin
   reg: process(clk, rst_n, pcWriteEnable)
   begin
     if(rst_n = '0') then
-      --present_val <= x"00000000";
-      programCounter <= (others => '0');
+      --programCounter <= (others => '0');
+      programCounter <= resetPC;
     elsif(rising_edge(clk)) then
       if(pcWriteEnable = '1') then
         --present_val <= next_val;

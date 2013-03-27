@@ -62,7 +62,7 @@ begin
           when others => ALUCtr <= "0000";
         end case;
       
-      if(to_integer(unsigned(opcode)) = 9 or to_integer(unsigned(opcode)) = 12 or to_integer(unsigned(opcode)) = 15 or to_integer(unsigned(opcode)) = 35 or to_integer(unsigned(opcode)) = 48 or to_integer(unsigned(opcode)) = 13 or to_integer(unsigned(opcode)) = 10 or to_integer(unsigned(opcode)) = 11 or to_integer(unsigned(opcode)) = 14 or to_integer(unsigned(opcode)) = 3) then
+      if(to_integer(unsigned(opcode)) = 56 or to_integer(unsigned(opcode)) = 9 or to_integer(unsigned(opcode)) = 12 or to_integer(unsigned(opcode)) = 15 or to_integer(unsigned(opcode)) = 35 or to_integer(unsigned(opcode)) = 48 or to_integer(unsigned(opcode)) = 13 or to_integer(unsigned(opcode)) = 10 or to_integer(unsigned(opcode)) = 11 or to_integer(unsigned(opcode)) = 14 or to_integer(unsigned(opcode)) = 3) then
         regWrite <= '1';
       else
         regWrite <= '0';

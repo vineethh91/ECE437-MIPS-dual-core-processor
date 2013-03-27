@@ -20,6 +20,7 @@ end mycpu;
 
 architecture arch_mycpu of mycpu is
   component core
+  generic ( coreResetPC : std_logic_vector(31 downto 0) := x"00000000" );
 		port ( 
 			-- clock signal
 			CLK							:		in	std_logic;
@@ -108,6 +109,7 @@ architecture arch_mycpu of mycpu is
   
  begin
    MyAwesomeCore0: core
+   generic map( coreResetPC => x"00000000")
 		port map( 
 			-- clock signal
 			CLK,
@@ -127,6 +129,7 @@ architecture arch_mycpu of mycpu is
 		);
 
    MyAwesomeCore1: core
+   generic map( coreResetPC => x"00000200")
 		port map( 
 			-- clock signal
 			CLK,
@@ -169,15 +172,27 @@ architecture arch_mycpu of mycpu is
     core0_ramState,
 
     -- Core1 signals
-    x"1234",
-    x"12345678",
-    '0',
-    '0',
-    '0',
-    '0',
-    '0',
-    core0_ramQ,
-    core0_ramState
+    --x"1234",
+--    x"12345678",
+--    '0',
+--    '0',
+--    '0',
+--    '0',
+--    '0',
+--    core0_ramQ,
+--    core0_ramState
+    -- Core0 signals
+    core1_ramAddr,
+    core1_ramData,
+    core1_ramWen,
+    core1_ramRen,
+    core1_ramdMemRead,
+    core1_ramdMemWrite,
+    core1_ramiMemRead,
+    core1_ramQ,
+    core1_ramState
+  
+
    );
    
     ramAddr     <= arbiterMemAddr;
@@ -185,8 +200,8 @@ architecture arch_mycpu of mycpu is
     ramWen      <= arbiterMemWrite;
     ramRen      <= arbiterMemRead;
  
-    core0_ramQ <= ramQ;        
-    core0_ramState <= ramState;
+--    core0_ramQ <= ramQ;        
+--    core0_ramState <= ramState;
       
-    halt <= core0_halt;
+    halt <= core0_halt and core1_halt;
 end architecture;

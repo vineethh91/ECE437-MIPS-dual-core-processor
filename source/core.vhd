@@ -2,6 +2,7 @@ LIBRARY IEEE;
 USE IEEE.std_logic_1164.ALL;
 
 entity core is
+  generic ( coreResetPC : std_logic_vector(31 downto 0) := x"00000000" );
 		port ( 
 			-- clock signal
 			CLK							:		in	std_logic;
@@ -82,6 +83,7 @@ architecture arch_core of core is
   end component;
   
   component pcReg
+  generic ( resetPC : std_logic_vector(31 downto 0) := x"00000000" );
   port(
        clk: in std_logic;
        rst_n: in std_logic;
@@ -1023,6 +1025,7 @@ begin
    IFSignal_pcWriteEnable <= hazardDetectionPCWriteEnable and IFSignal_pcWriteEnableControlEnable;
     
    pcRegBlock : pcReg
+   generic map( resetPC => coreResetPC)
    port map(
        clk             => CLK,
        rst_n           => nReset,
