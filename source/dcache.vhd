@@ -76,6 +76,7 @@ architecture struct of dcache is
 		WAY1_currentTag					:	in	std_logic_vector(24 downto 0);
 
     LLSC_flag : in std_logic;
+    linkRegisterMatch : out std_logic;
     
     CACHE_StoreWordOffset : out std_logic;
 		CACHE_WordToStore : out std_logic_vector(31 downto 0);
@@ -130,7 +131,7 @@ architecture struct of dcache is
   signal	newHitForHitCounter : std_logic;
   signal	hitCounterCount : std_logic_vector(31 downto 0);
   signal	hitCounterAddr : std_logic_vector(15 downto 0);
-  	
+ 	signal linkRegMatch : std_logic;
 begin
 --  dMemWait       <= adMemWait;
 --  adMemRead      <= dMemRead;
@@ -195,6 +196,7 @@ begin
     WAY1currentTag,
     
     MEMStage_LLSC_flag,
+    linkRegMatch,
     
 		storeWordOffset,
 		dcache_WordToStore,
@@ -233,7 +235,25 @@ begin
   hit <= WAY0_tHit or WAY1_tHit;		
 	
 	-- return word from block 
-	dMemDataRead <= WAY0_readWord when (WAY0_tHit = '1') else WAY1_readWord when (WAY1_tHit = '1') else x"BAD2BAD2";
+  memDataAssign : process(WAY0_tHit, WAY1_tHit, linkRegMatch, MEMStage_llsc_flag, dMemWrite, WAY0_readWord, WAY1_readWord)
+  begin
+    if(((WAY0_tHit = '1') or (WAY1_tHit = '1')) and (linkRegMatch = '1') and (MEMStage_llsc_flag = '1') and (dMemWrite = '1')) then
+      dMemDataRead <= x"00000001";
+    elsif(((WAY0_tHit = '1') or (WAY1_tHit = '1')) and (linkRegMatch = '0') and (MEMStage_llsc_flag = '1') and (dMemWrite = '1')) then
+      dMemDataRead <= x"00000000";
+    elsif(WAY0_tHit = '1') then
+      dMemDataRead <= WAY0_readWord;
+    elsif(WAY1_tHit = '1') then
+      dMemDataRead <= WAY1_readWord;
+    else
+      dMemDataRead <= x"BAD2BAD2";
+    end if;
+  end process;
+--	dMemDataRead <= x"00000001" when (((WAY0_tHit = '1') or (WAY1_tHit = '1')) and (linkRegMatch = '1') and (MEMStage_llsc_flag = '1') and (dMemWrite = '1'))
+--               	  else x"00000000" when (((WAY0_tHit = '1') or (WAY1_tHit = '1')) and (linkRegMatch = '0') and (MEMStage_llsc_flag = '1') and (dMemWrite = '1'))
+--	                else WAY0_readWord when (WAY0_tHit = '1') 
+--	                else WAY1_readWord when (WAY1_tHit = '1') 
+--	                else x"BAD2BAD2";
 
 	-- on halt: flush the cache blocks that are dirty
 	-- put that logic here

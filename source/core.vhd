@@ -334,7 +334,11 @@ architecture arch_core of core is
       ID_Rs : in std_logic_vector(4 downto 0);
       ID_Rt : in std_logic_vector(4 downto 0);
       EX_memRead : in std_logic;
-      
+     
+      EX_LLSCflag : in std_logic;
+      EX_memWrite : in std_logic;
+      ID_memWrite : in std_logic;
+       
       IFID_writeEnable : out std_logic;
       IDEX_writeEnable : out std_logic;
       EXMEM_writeEnable : out std_logic;
@@ -1200,6 +1204,10 @@ begin
       ID_Rs => IDSignal_instruction(25 downto 21),
       ID_Rt => IDSignal_instruction(20 downto 16),
       EX_memRead => EXSignal_memRead,
+      
+      EX_LLSCflag => EXSignal_llsc_flag,
+      EX_memWrite => EXSignal_memWrite,
+      ID_memWrite => IDoutSignal_memWrite,
       
       IFID_writeEnable => hazardDetection_IFIDWriteEnable,
       IDEX_writeEnable => hazardDetection_IDEXWriteEnable,

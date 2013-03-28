@@ -126,6 +126,7 @@ begin
       with to_integer(unsigned(opcode)) select
         memToReg <= '1' when 35,
                     '1' when 48,
+                    '1' when 56,                                        
                    '0' when others;
 
       with to_integer(unsigned(opcode)) select

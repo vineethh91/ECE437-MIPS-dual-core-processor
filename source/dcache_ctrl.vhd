@@ -32,6 +32,7 @@ entity dcache_ctrl is
 		WAY1_currentTag					:	in	std_logic_vector(24 downto 0);
     
     LLSC_flag : in std_logic;
+    linkRegisterMatch : out std_logic;
     
     CACHE_StoreWordOffset : out std_logic;
 		CACHE_WordToStore : out std_logic_vector(31 downto 0);
@@ -99,6 +100,8 @@ begin
     hitCounterEn <= nextHitCounterEn;
     if((LLSC_flag = '1') and (MEMStage_memRead = '1')) then
       linkRegister <= MEMStage_Addr;
+    elsif((MEMStage_memWrite = '1') and (linkRegister = MEMStage_Addr)) then
+      linkRegister <= x"00000000";
     end if;
 	end if;
 end process cctrl_state;
@@ -206,10 +209,12 @@ end process cctrl_ns;
 indexInteger <= to_integer(unsigned(MEMStage_Addr(6 downto 3))); -- convert the index to a integer so we can use it to look up values in the array
 
 		WAY0_WriteEnable	<= '1' when ((((state = FETCH_WORD0) and (arbiterMemWait = '0')) or ((state = FETCH_WORD1) and (arbiterMemWait = '0'))) and (LEAST_RECENTLY_USED(indexInteger) = '0'))
-		                    else '1' when ((WAY0_Hit = '1') and (MEMStage_memWrite = '1'))
+		                    else '1' when (((state = IDLE) and (WAY0_Hit = '1')) and (MEMStage_memWrite = '1') and (LLSC_flag = '1') and (MEMStage_Addr = linkRegister))
+		                    else '1' when ((WAY0_Hit = '1') and (MEMStage_memWrite = '1') and (LLSC_flag = '0'))
 		                    else '0';
     WAY1_WriteEnable <= '1' when ((((state = FETCH_WORD0) and (arbiterMemWait = '0')) or ((state = FETCH_WORD1) and (arbiterMemWait = '0'))) and (LEAST_RECENTLY_USED(indexInteger) = '1')) 
-                        else '1' when ((WAY1_Hit = '1') and (MEMStage_memWrite = '1'))
+    		                  else '1' when (((state = IDLE) and (WAY1_Hit = '1')) and (MEMStage_memWrite = '1') and (LLSC_flag = '1') and (MEMStage_Addr = linkRegister))
+                        else '1' when ((WAY1_Hit = '1') and (MEMStage_memWrite = '1') and (LLSC_flag = '0'))
                         else '0';
     CACHE_StoreWordOffset <= '0' when (state = FETCH_WORD0) 
                              else '1' when (state = FETCH_WORD1)
@@ -265,15 +270,16 @@ indexInteger <= to_integer(unsigned(MEMStage_Addr(6 downto 3))); -- convert the 
 		pooped <= '1' when (state = DUMP_FINISHED) else '0';
     
 		HIT_COUNTER_WE <= '0' when ((state = FETCH_WORD1) and (nextState = IDLE)) 
-		                  --else '1' when ((hitCounterEn = '1') and ((state = IDLE) and ((WAY0_Hit = '1') or (WAY1_Hit = '1')) and ((prevMemStageAddr /= MEMStage_Addr) or ((MEMStage_memRead = '1') and (prevMemStageMemRead /= MEMStage_memRead)) or ((MEMStage_memWrite = '1') and (prevMemStageMemWrite /= MEMStage_memWrite))) and ((MEMStage_memRead = '1') or (MEMStage_memWrite = '1'))))
-		                  -- THIS WORKS FOR FIBSEARCHMULT
 		                  else '1' when ((state = IDLE) and ((WAY0_Hit = '1') or (WAY1_Hit = '1')) and ((prevMemStageFullAddr /= MEMStage_Addr) or ((MEMStage_memRead = '1') and (prevMemStageMemRead /= MEMStage_memRead)) or ((MEMStage_memWrite = '1') and (prevMemStageMemWrite /= MEMStage_memWrite))) and ((MEMStage_memRead = '1') or (MEMStage_memWrite = '1')))
+                      else '1' when (((state = IDLE) and ((WAY0_Hit = '1') or (WAY1_Hit = '1'))) and (MEMStage_memWrite = '1') and (LLSC_flag = '1') and (MEMStage_Addr = linkRegister))
 		                  else '0';
-		                    
+
+    linkRegisterMatch <= '1' when (((state = IDLE) and ((WAY0_Hit = '1') or (WAY1_Hit = '1'))) and (MEMStage_memWrite = '1') and (LLSC_flag = '1') and (MEMStage_Addr = linkRegister)) else '0';
+    
 		HIT_COUNTER_NEW_HIT <= '0' when ((state = FETCH_WORD1) and (nextState = IDLE)) 
 		                       else '1' when ((state = IDLE) and ((WAY0_Hit = '1') or (WAY1_Hit = '1')) and ((prevMemStageFullAddr /= MEMStage_Addr) or ((MEMStage_memRead = '1') and (prevMemStageMemRead /= MEMStage_memRead)) or ((MEMStage_memWrite = '1') and (prevMemStageMemWrite /= MEMStage_memWrite))) and ((MEMStage_memRead = '1') or (MEMStage_memWrite = '1')))
 		                       else '0';
-		--'1';
+
 		hitCounterStoreAddress <= x"0000" & HIT_COUNTER_STORE_ADDRESS;
 end;
 

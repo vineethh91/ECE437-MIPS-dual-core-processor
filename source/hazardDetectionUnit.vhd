@@ -8,6 +8,10 @@ entity hazardDetectionUnit is
       ID_Rt : in std_logic_vector(4 downto 0);
       EX_memRead : in std_logic;
       
+      EX_LLSCflag : in std_logic;
+      EX_memWrite : in std_logic;
+      ID_memWrite : in std_logic;
+            
       IFID_writeEnable : out std_logic;
       IDEX_writeEnable : out std_logic;
       EXMEM_writeEnable : out std_logic;
@@ -21,14 +25,20 @@ end hazardDetectionUnit;
 
 architecture arch_hazardDetectionUnit of hazardDetectionUnit is
 begin
-  IFID_writeEnable <= '0' when ((EX_memRead = '1') and ((EX_Rt = ID_Rs) or (EX_Rt = ID_Rt))) else '1';
+  IFID_writeEnable <= '0' when ((EX_memRead = '1') and ((EX_Rt = ID_Rs) or (EX_Rt = ID_Rt))) 
+                    --  else '0' when ((EX_memWrite = '1') and (EX_LLSCflag = '1') and (ID_memWrite = '1') and (EX_Rt = ID_Rt))
+                      else '1';
   IDEX_writeEnable <= '1';--'0' when ((EX_memRead = '1') and ((EX_Rt = ID_Rs) or (EX_Rt = ID_Rt))) else '1';
   EXMEM_writeEnable <= '1';
   MEMWB_writeEnable <= '1';
 
   
-  pcWriteEnable <= '0' when ((EX_memRead = '1') and ((EX_Rt = ID_Rs) or (EX_Rt = ID_Rt))) else '1';
+  pcWriteEnable <= '0' when ((EX_memRead = '1') and ((EX_Rt = ID_Rs) or (EX_Rt = ID_Rt))) 
+                  -- else '0' when ((EX_LLSCflag = '1') and (ID_memWrite = '1') and (EX_Rt = ID_Rt))
+                   else '1';
   
-  disableControlSignals <= '1' when ((EX_memRead = '1') and ((EX_Rt = ID_Rs) or (EX_Rt = ID_Rt))) else '0';  -- inject NOP in case theres a LW followed by a use
-  
+  disableControlSignals <= '1' when ((EX_memRead = '1') and ((EX_Rt = ID_Rs) or (EX_Rt = ID_Rt)))  -- inject NOP in case theres a LW followed by a use
+                          -- else '1' when ((EX_memWrite = '1') and (EX_LLSCflag = '1') and (ID_memWrite = '1') and (EX_Rt = ID_Rt)) -- inject NOP in case theres a SC followed by a SW
+                           else '0'; 
+ 
 end arch_hazardDetectionUnit;
