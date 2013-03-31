@@ -33,6 +33,8 @@ entity dcache_ctrl is
     
     LLSC_flag : in std_logic;
     linkRegisterMatch : out std_logic;
+		invalidateLinkReg : in std_logic;
+		invalidateLinkRegAddr : in std_logic_vector(31 downto 0);
     
     CACHE_StoreWordOffset : out std_logic;
 		CACHE_WordToStore : out std_logic_vector(31 downto 0);
@@ -100,6 +102,8 @@ begin
     hitCounterEn <= nextHitCounterEn;
     if((LLSC_flag = '1') and (MEMStage_memRead = '1')) then
       linkRegister <= MEMStage_Addr;
+    elsif((invalidateLinkReg = '1') and (invalidateLinkRegAddr = linkRegister)) then
+      linkRegister <= x"00000000";
     elsif((MEMStage_memWrite = '1') and (linkRegister = MEMStage_Addr)) then
       linkRegister <= x"00000000";
     end if;

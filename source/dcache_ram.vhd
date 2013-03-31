@@ -32,7 +32,7 @@ architecture struct of dcache_ram is
   type validBits is array (0 to 15) of std_logic;
   signal validArray : validBits; 
   type dirtyBits is array (0 to 15) of std_logic;
-  signal dirtyArray : dirtyBits;
+  signal dirtyArray, nextDirtyArray : dirtyBits;
   type tagBits is array (0 to 15) of std_logic_vector(24 downto 0);
   signal tagArray : tagBits;
   type setBits is array (0 to 15) of std_logic_vector(63 downto 0); -- Word 0 = <63:32>, Word 1 = <31 downto 0>
@@ -55,14 +55,22 @@ begin
 	elsif rising_edge(CLK) then
 		if WrEn = '1' then
 		 	validArray(indexInteger) <= '1';
-		 	if((validArray(indexInteger) = '1') and (MEM_memWrite = '1')) then
-		 	  dirtyArray(indexInteger) <= '1';
-		 	end if;    
+      dirtyArray <= nextDirtyArray;
 		 	tagArray(indexInteger) <= Tag;
 		 	setArray(indexInteger) <= nextSetArray;
 		end if;
 	end if;
 end process cache_reg;
+
+dirtyBitsProcess : process( CLK, nReset, WrEn)
+begin
+  if(nReset = '0') then
+    nextDirtyArray <= dirtyArray;  
+  elsif((validArray(indexInteger) = '1') and (MEM_memWrite = '1')) then
+    nextDirtyArray(indexInteger) <= '1';
+  end if;
+  
+end process;
 
 nextSetArray <= (setArray(indexInteger)(63 downto 32) & InputWord) when (InputWordOffset = '1') else (InputWord & setArray(indexInteger)(31 downto 0));
 
@@ -77,6 +85,8 @@ end process cache_lookup;
 
 indexInteger <= to_integer(unsigned(Index)); -- convert the index to a integer so we can use it to look up values in the array
 
+
+  
 --OutputWord <= setArray(indexInteger)(63 downto 32) when ((WordOffset = '0') and (validArray(indexInteger) = '1') and (tagArray(indexInteger) = Tag)) else setArray(indexInteger)(31 downto 0) when ((WordOffset = '1') and (validArray(indexInteger) = '1') and (tagArray(indexInteger) = Tag)) else x"BAD1BAD1";
 OutputWord <= setArray(indexInteger)(63 downto 32) when ((WordOffset = '0') and (validArray(indexInteger) = '1')) else setArray(indexInteger)(31 downto 0);
 Dirty <= dirtyArray(indexInteger);

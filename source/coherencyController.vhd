@@ -6,7 +6,40 @@ entity coherencyController is
   port (
     clk             : in std_logic;
     nReset          : in std_logic;
-    
+    			-- coherence controller
+      c0_dCacheRead		: in  std_logic;
+	  	 c0_dCacheWrite	:	in std_logic;
+      c0_dCacheAddr		: in  std_logic_vector (31 downto 0);
+	  	 c0_dCacheDataWrite	: in	std_logic_vector (31 downto 0);
+
+      -- snoop signals
+	  	 c0_cocoSnoopFlag : out std_logic;
+	  	 c0_cocoSnoopAddr : out std_logic_vector(31 downto 0);
+	  	 c0_cocoFinishedSnooping : in std_logic;
+	  	 c0_cocoSnoopHit  : in std_logic;
+	  	 c0_cocoSnoopData : in std_logic_vector(31 downto 0);
+
+      -- MSI protocol     
+	  	 c0_invalidateAddr : out std_logic_vector(31 downto 0);
+	  	 c0_invalidateAddrFlag : out std_logic;
+
+    			-- coherence controller
+      c1_dCacheRead		: in  std_logic;
+	  	 c1_dCacheWrite	:	in std_logic;
+      c1_dCacheAddr		: in  std_logic_vector (31 downto 0);
+	  	 c1_dCacheDataWrite	: in	std_logic_vector (31 downto 0);
+
+      -- snoop signals
+	  	 c1_cocoSnoopFlag : out std_logic;
+	  	 c1_cocoSnoopAddr : out std_logic_vector(31 downto 0);
+	  	 c1_cocoFinishedSnooping : in std_logic;
+	  	 c1_cocoSnoopHit  : in std_logic;
+	  	 c1_cocoSnoopData : in std_logic_vector(31 downto 0);
+
+      -- MSI protocol     
+	  	 c1_invalidateAddr : out std_logic_vector(31 downto 0);
+	  	 c1_invalidateAddrFlag : out std_logic;
+  
     -- Arbiter signals
     arb_MemRead      : out std_logic;
     arb_MemWrite     : out std_logic;

@@ -10,6 +10,31 @@ entity core is
 			nReset					:		in	std_logic;
 			-- halt for processor
 			halt						:		out	std_logic;
+			
+			-- coherence controller
+      dCacheRead		: out  std_logic;
+	  	  dCacheWrite	:	out std_logic;
+      dCacheAddr		: out  std_logic_vector (31 downto 0);
+      dCacheDataWrite	: out	std_logic_vector (31 downto 0);
+
+      -- snoop signals
+      cocoSnoopFlag : in std_logic;
+      cocoSnoopAddr : in std_logic_vector(31 downto 0);
+      cocoFinishedSnooping : out std_logic;
+      cocoSnoopHit  : out std_logic;
+      cocoSnoopData : out std_logic_vector(31 downto 0);
+
+      -- MSI protocol     
+      invalidateAddr : in std_logic_vector(31 downto 0);
+      invalidateAddrFlag : in std_logic;
+        
+      -- invalidate link register -- goes from one core to another
+      outInvalidateLinkRegister : out std_logic;
+      outInvalidateLinkRegisterAddr : out std_logic_vector(31 downto 0);
+      inInvalidateLinkRegister : in std_logic;
+      inInvalidateLinkRegisterAddr : in std_logic_vector(31 downto 0);
+      
+      -- to the arbiter
             ramAddr : out std_logic_vector(15 downto 0);
             ramData : out std_logic_vector(31 downto 0);
             ramWen  : out std_logic;
@@ -607,6 +632,22 @@ architecture arch_core of core is
 		
 		MEMStage_LLSC_flag : in std_logic;
 		
+		invalidateOtherCoreLinkReg : out std_logic;
+		invalidateOtherCoreLinkRegAddr : out std_logic_vector(31 downto 0);
+		invalidateThisCoreLinkReg : in std_logic;
+		invalidateThisCoreLinkRegAddr : in std_logic_vector(31 downto 0);
+		
+      -- snoop signals
+      cocoSnoopFlag : in std_logic;
+      cocoSnoopAddr : in std_logic_vector(31 downto 0);
+      cocoFinishedSnooping : out std_logic;
+      cocoSnoopHit  : out std_logic;
+      cocoSnoopData : out std_logic_vector(31 downto 0);
+
+      -- MSI protocol     
+      invalidateAddr : in std_logic_vector(31 downto 0);
+      invalidateAddrFlag : in std_logic;
+
     dMemRead		: in  std_logic;                       -- CPU side
 		dMemWrite	:	in	std_logic;											 -- CPU side
     dMemWait		: out std_logic;                       -- CPU side
@@ -1685,6 +1726,22 @@ begin
     
   		MEMStage_LLSC_flag => MEMSignal_llsc_flag,
   		
+    invalidateOtherCoreLinkReg => outInvalidateLinkRegister,
+    invalidateOtherCoreLinkRegAddr => outInvalidateLinkRegisterAddr,
+		invalidateThisCoreLinkReg => inInvalidateLinkRegister,
+		invalidateThisCoreLinkRegAddr => inInvalidateLinkRegisterAddr,
+
+      -- snoop signals
+     cocoSnoopFlag => cocoSnoopFlag,
+     cocoSnoopAddr => cocoSnoopAddr,
+     cocoFinishedSnooping => cocoFinishedSnooping,
+     cocoSnoopHit => cocoSnoopHit,
+     cocoSnoopData => cocoSnoopData,
+
+      -- MSI protocol     
+     invalidateAddr => invalidateAddr,
+     invalidateAddrFlag => invalidateAddrFlag,
+
     dMemRead       => MEMSignal_memRead,                
     dMemWrite      => MEMSignal_memWrite,                
     dMemWait       => MEMSignal_dMemWait,
@@ -1746,6 +1803,13 @@ begin
     ramdMemWrite <= arbiterRamSignal_dMemWrite;
     ramiMemRead <= arbiterRamSignal_iMemRead;
 
+			-- coherence controller
+      dCacheRead		<= MEMSignal_memRead;
+   	  dCacheWrite	<= MEMSignal_memWrite;
+      dCacheAddr		<= MEMSignal_ALURes;
+      dCacheDataWrite	<= MEMSignal_Data2;
+      
+ 
     arbiterRamSignal_q <= ramQ;        
     arbiterRamSignal_memstate <= ramState;
       

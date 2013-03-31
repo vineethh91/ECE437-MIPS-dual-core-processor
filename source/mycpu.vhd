@@ -28,6 +28,30 @@ architecture arch_mycpu of mycpu is
 			nReset					:		in	std_logic;
 			-- halt for processor
 			halt						:		out	std_logic;
+			
+			-- coherence controller
+      dCacheRead		: out  std_logic;
+   	  dCacheWrite	:	out std_logic;
+      dCacheAddr		: out  std_logic_vector (31 downto 0);
+      dCacheDataWrite	: out	std_logic_vector (31 downto 0);
+
+      -- snoop signals
+      cocoSnoopFlag : in std_logic;
+      cocoSnoopAddr : in std_logic_vector(31 downto 0);
+      cocoFinishedSnooping : out std_logic;
+      cocoSnoopHit  : out std_logic;
+      cocoSnoopData : out std_logic_vector(31 downto 0);
+
+      -- MSI protocol     
+      invalidateAddr : in std_logic_vector(31 downto 0);
+      invalidateAddrFlag : in std_logic;
+        
+      -- invalidate link register -- goes from one core to another
+      outInvalidateLinkRegister : out std_logic;
+      outInvalidateLinkRegisterAddr : out std_logic_vector(31 downto 0);
+      inInvalidateLinkRegister : in std_logic;
+      inInvalidateLinkRegisterAddr : in std_logic_vector(31 downto 0);
+
             ramAddr : out std_logic_vector(15 downto 0);
             ramData : out std_logic_vector(31 downto 0);
             ramWen  : out std_logic;
@@ -45,6 +69,40 @@ architecture arch_mycpu of mycpu is
     clk             : in std_logic;
     nReset          : in std_logic;
     
+    			-- coherence controller
+      c0_dCacheRead		: in  std_logic;
+	  	 c0_dCacheWrite	:	in std_logic;
+      c0_dCacheAddr		: in  std_logic_vector (31 downto 0);
+	  	 c0_dCacheDataWrite	: in	std_logic_vector (31 downto 0);
+
+      -- snoop signals
+	  	 c0_cocoSnoopFlag : out std_logic;
+	  	 c0_cocoSnoopAddr : out std_logic_vector(31 downto 0);
+	  	 c0_cocoFinishedSnooping : in std_logic;
+	  	 c0_cocoSnoopHit  : in std_logic;
+	  	 c0_cocoSnoopData : in std_logic_vector(31 downto 0);
+
+      -- MSI protocol     
+	  	 c0_invalidateAddr : out std_logic_vector(31 downto 0);
+	  	 c0_invalidateAddrFlag : out std_logic;
+
+    			-- coherence controller
+      c1_dCacheRead		: in  std_logic;
+	  	 c1_dCacheWrite	:	in std_logic;
+      c1_dCacheAddr		: in  std_logic_vector (31 downto 0);
+	  	 c1_dCacheDataWrite	: in	std_logic_vector (31 downto 0);
+
+      -- snoop signals
+	  	 c1_cocoSnoopFlag : out std_logic;
+	  	 c1_cocoSnoopAddr : out std_logic_vector(31 downto 0);
+	  	 c1_cocoFinishedSnooping : in std_logic;
+	  	 c1_cocoSnoopHit  : in std_logic;
+	  	 c1_cocoSnoopData : in std_logic_vector(31 downto 0);
+
+      -- MSI protocol     
+	  	 c1_invalidateAddr : out std_logic_vector(31 downto 0);
+	  	 c1_invalidateAddrFlag : out std_logic;
+
     -- Arbiter signals
     arb_MemRead      : out std_logic;
     arb_MemWrite     : out std_logic;
@@ -107,6 +165,50 @@ architecture arch_mycpu of mycpu is
   signal arbiterMemAddr: std_logic_vector(15 downto 0);
   signal arbiterMemDataWrite : std_logic_vector(31 downto 0);
   
+  ---------- CORE0 COHERENCY SIGNALS -----------------
+  			-- coherence controller
+  signal core0_dCacheRead		: std_logic;
+  signal core0_dCacheWrite	:	std_logic;
+  signal core0_dCacheAddr		: std_logic_vector (31 downto 0);
+  signal core0_dCacheDataWrite	: std_logic_vector (31 downto 0);
+
+      -- snoop signals
+  signal core0_cocoSnoopFlag : std_logic;
+  signal core0_cocoSnoopAddr : std_logic_vector(31 downto 0);
+  signal core0_cocoFinishedSnooping : std_logic;
+  signal core0_cocoSnoopHit  : std_logic;
+  signal core0_cocoSnoopData : std_logic_vector(31 downto 0);
+
+      -- MSI protocol     
+  signal core0_invalidateAddr : std_logic_vector(31 downto 0);
+  signal core0_invalidateAddrFlag : std_logic;
+        
+      -- invalidate link register -- goes from one core to another
+  signal core0_outInvalidateLinkRegister : std_logic;
+  signal core0_outInvalidateLinkRegisterAddr : std_logic_vector(31 downto 0);
+
+  ---------- CORE1 COHERENCY SIGNALS -----------------
+  			-- coherence controller
+  signal core1_dCacheRead		: std_logic;
+  signal core1_dCacheWrite	:	std_logic;
+  signal core1_dCacheAddr		: std_logic_vector (31 downto 0);
+  signal core1_dCacheDataWrite	: std_logic_vector (31 downto 0);
+
+      -- snoop signals
+  signal core1_cocoSnoopFlag : std_logic;
+  signal core1_cocoSnoopAddr : std_logic_vector(31 downto 0);
+  signal core1_cocoFinishedSnooping : std_logic;
+  signal core1_cocoSnoopHit  : std_logic;
+  signal core1_cocoSnoopData : std_logic_vector(31 downto 0);
+
+      -- MSI protocol     
+  signal core1_invalidateAddr : std_logic_vector(31 downto 0);
+  signal core1_invalidateAddrFlag : std_logic;
+        
+      -- invalidate link register -- goes from one core to another
+  signal core1_outInvalidateLinkRegister : std_logic;
+  signal core1_outInvalidateLinkRegisterAddr : std_logic_vector(31 downto 0);
+
  begin
    MyAwesomeCore0: core
    generic map( coreResetPC => x"00000000")
@@ -117,6 +219,30 @@ architecture arch_mycpu of mycpu is
 			nReset,
 			-- halt for processor
 			core0_halt,
+			
+			-- coherence controller
+      core0_dCacheRead,
+      core0_dCacheWrite,
+      core0_dCacheAddr,
+      core0_dCacheDataWrite,
+
+      -- snoop signals
+      core0_cocoSnoopFlag,
+      core0_cocoSnoopAddr,
+      core0_cocoFinishedSnooping,
+      core0_cocoSnoopHit,
+      core0_cocoSnoopData,
+
+      -- MSI protocol     
+      core0_invalidateAddr,
+      core0_invalidateAddrFlag,
+        
+      -- invalidate link register -- goes from one core to another
+      core0_outInvalidateLinkRegister,
+      core0_outInvalidateLinkRegisterAddr,
+      core1_outInvalidateLinkRegister,
+      core1_outInvalidateLinkRegisterAddr,
+
       core0_ramAddr,
       core0_ramData,
       core0_ramWen,
@@ -137,6 +263,30 @@ architecture arch_mycpu of mycpu is
 			nReset,
 			-- halt for processor
 			core1_halt,
+			
+			-- coherence controller
+      core1_dCacheRead,
+      core1_dCacheWrite,
+      core1_dCacheAddr,
+      core1_dCacheDataWrite,
+
+      -- snoop signals
+      core1_cocoSnoopFlag,
+      core1_cocoSnoopAddr,
+      core1_cocoFinishedSnooping,
+      core1_cocoSnoopHit,
+      core1_cocoSnoopData,
+
+      -- MSI protocol     
+      core1_invalidateAddr,
+      core1_invalidateAddrFlag,
+        
+      -- invalidate link register -- goes from one core to another
+      core1_outInvalidateLinkRegister,
+      core1_outInvalidateLinkRegisterAddr,
+      core0_outInvalidateLinkRegister,
+      core0_outInvalidateLinkRegisterAddr,
+         	  
       core1_ramAddr,
       core1_ramData,
       core1_ramWen,
@@ -152,6 +302,40 @@ architecture arch_mycpu of mycpu is
     CLK,
     nReset,
     
+        			-- coherence controller
+      core0_dCacheRead,
+	  	 core0_dCacheWrite,
+      core0_dCacheAddr,
+	  	 core0_dCacheDataWrite,
+
+      -- snoop signals
+	  	 core0_cocoSnoopFlag,
+	  	 core0_cocoSnoopAddr,
+	  	 core0_cocoFinishedSnooping,
+	  	 core0_cocoSnoopHit,
+	  	 core0_cocoSnoopData,
+
+      -- MSI protocol     
+	  	 core0_invalidateAddr,
+	  	 core0_invalidateAddrFlag,
+
+    			-- coherence controller
+      core1_dCacheRead,
+	  	 core1_dCacheWrite,
+      core1_dCacheAddr,
+	  	 core1_dCacheDataWrite,
+
+      -- snoop signals
+	  	 core1_cocoSnoopFlag,
+	  	 core1_cocoSnoopAddr,
+	  	 core1_cocoFinishedSnooping,
+	  	 core1_cocoSnoopHit,
+	  	 core1_cocoSnoopData,
+
+      -- MSI protocol     
+	  	 core1_invalidateAddr,
+	  	 core1_invalidateAddrFlag,
+
     -- Arbiter signals
     arbiterMemRead,
     arbiterMemWrite,
@@ -172,16 +356,6 @@ architecture arch_mycpu of mycpu is
     core0_ramState,
 
     -- Core1 signals
-    --x"1234",
---    x"12345678",
---    '0',
---    '0',
---    '0',
---    '0',
---    '0',
---    core0_ramQ,
---    core0_ramState
-    -- Core0 signals
     core1_ramAddr,
     core1_ramData,
     core1_ramWen,

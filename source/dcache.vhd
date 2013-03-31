@@ -18,6 +18,22 @@ entity dcache is
 		
 		MEMStage_LLSC_flag : in std_logic;
 		
+		invalidateOtherCoreLinkReg : out std_logic;
+		invalidateOtherCoreLinkRegAddr : out std_logic_vector(31 downto 0);
+		invalidateThisCoreLinkReg : in std_logic;
+		invalidateThisCoreLinkRegAddr : in std_logic_vector(31 downto 0);
+
+      -- snoop signals
+      cocoSnoopFlag : in std_logic;
+      cocoSnoopAddr : in std_logic_vector(31 downto 0);
+      cocoFinishedSnooping : out std_logic;
+      cocoSnoopHit  : out std_logic;
+      cocoSnoopData : out std_logic_vector(31 downto 0);
+
+      -- MSI protocol     
+      invalidateAddr : in std_logic_vector(31 downto 0);
+      invalidateAddrFlag : in std_logic;
+		
     dMemRead		: in  std_logic;                       -- CPU side
 		dMemWrite	:	in	std_logic;											 -- CPU side
     dMemWait		: out std_logic;                       -- CPU side
@@ -77,6 +93,8 @@ architecture struct of dcache is
 
     LLSC_flag : in std_logic;
     linkRegisterMatch : out std_logic;
+		invalidateLinkReg : in std_logic;
+		invalidateLinkRegAddr : in std_logic_vector(31 downto 0);
     
     CACHE_StoreWordOffset : out std_logic;
 		CACHE_WordToStore : out std_logic_vector(31 downto 0);
@@ -197,7 +215,9 @@ begin
     
     MEMStage_LLSC_flag,
     linkRegMatch,
-    
+  		invalidateThisCoreLinkReg,
+		invalidateThisCoreLinkRegAddr,
+
 		storeWordOffset,
 		dcache_WordToStore,
 		cacheIndex,
@@ -257,5 +277,7 @@ begin
 
 	-- on halt: flush the cache blocks that are dirty
 	-- put that logic here
-
+  invalidateOtherCoreLinkReg <= '1' when (((WAY0_tHit = '1') or (WAY1_tHit = '1')) and (linkRegMatch = '1') and (MEMStage_llsc_flag = '1') and (dMemWrite = '1'))
+                                else '0';
+  invalidateOtherCoreLinkRegAddr <= dMemAddr;
 end struct;
