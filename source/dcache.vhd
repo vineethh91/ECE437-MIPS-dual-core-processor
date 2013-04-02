@@ -56,7 +56,11 @@ architecture struct of dcache is
 		CLK					:	in	std_logic;
 		nReset			:	in	std_logic;
 		WrEn				:	in	std_logic;
-		Tag					:	in	std_logic_vector (24 downto 0);
+   	snoopFlag : in std_logic;
+		snoopAddr : in std_logic_vector(31 downto 0);
+		snoopHit : out std_logic;
+		snoopData : out std_logic_vector(31 downto 0);
+    Tag					:	in	std_logic_vector (24 downto 0);
 		Index				:	in	std_logic_vector (03 downto 0);
 		WordOffset : in std_logic;
 		InputWord	:	in 	std_logic_vector (31 downto 0);
@@ -136,6 +140,8 @@ architecture struct of dcache is
 	-- internal singals
 	signal WAY0_tValid, WAY0_tWrEn, WAY0_tHit, WAY0_tDirty					: std_logic; 
 	signal WAY1_tValid, WAY1_tWrEn, WAY1_tHit, WAY1_tDirty					: std_logic; 
+	signal WAY0_snoopHit, WAY1_snoopHit : std_logic;
+	signal WAY0_snoopData, WAY1_snoopData : std_logic_vector(31 downto 0);
 	signal hit : std_logic;
 	signal WAY0_readWord, WAY1_readWord		: std_logic_vector (31 downto 0);
 	signal WAY0currentTag, WAY1currentTag		: std_logic_vector (24 downto 0);
@@ -163,6 +169,10 @@ begin
 		CLK,
 		nReset,
 		WAY0_tWrEn,
+    cocoSnoopFlag,
+    cocoSnoopAddr,
+    WAY0_snoopHit,
+    WAY0_snoopData,
 		dMemAddr (31 downto 7),		-- tag to look for
 		cacheIndex,			-- set to look in
 		cacheWordOffset,
@@ -180,6 +190,10 @@ begin
 		CLK,
 		nReset,
 		WAY1_tWrEn,
+    cocoSnoopFlag,
+    cocoSnoopAddr,
+    WAY1_snoopHit,
+    WAY1_snoopData,
 		dMemAddr (31 downto 7),		-- tag to look for
 		cacheIndex,			-- set to look in
 		cacheWordOffset,
@@ -277,6 +291,11 @@ begin
 
 	-- on halt: flush the cache blocks that are dirty
 	-- put that logic here
+  cocoSnoopHit  <= WAY0_snoopHit or WAY1_snoopHit;
+  cocoSnoopData <= WAY0_snoopData when (WAY0_snoopHit = '1')
+                   else WAY1_snoopData when (WAY1_snoopHit = '1')
+                   else x"BAD4BAD4";
+
   invalidateOtherCoreLinkReg <= '1' when (((WAY0_tHit = '1') or (WAY1_tHit = '1')) and (linkRegMatch = '1') and (MEMStage_llsc_flag = '1') and (dMemWrite = '1'))
                                 else '0';
   invalidateOtherCoreLinkRegAddr <= dMemAddr;

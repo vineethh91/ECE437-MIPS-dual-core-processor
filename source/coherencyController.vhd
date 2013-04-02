@@ -73,7 +73,7 @@ entity coherencyController is
  end coherencyController;
 
 architecture arch_coherencyController of coherencyController is
-  type state_type is (IDLE, CORE0_ARBITER_READ, CORE0_ARBITER_WRITE, CORE1_ARBITER_READ, CORE1_ARBITER_WRITE, CORE0_ACCESS, CORE1_ACCESS);
+  type state_type is (IDLE, CORE0_ARBITER_READ, CORE0_ARBITER_WRITE, CORE1_ARBITER_READ, CORE1_ARBITER_WRITE, CORE0_ACCESS, CORE1_ACCESS, SNOOP_IN_CORE1, SNOOP_IN_CORE0);
   signal state, nextState, prevState, nextPrevState : state_type;
 begin
 
@@ -82,7 +82,7 @@ begin
 	if (nReset = '0') then
     state <= IDLE;
     prevState <= CORE1_ACCESS;
-  elsif falling_edge(CLK) then
+  elsif rising_edge(CLK) then
     state <= nextState;
     prevState <= nextPrevState;
 	end if;
@@ -95,11 +95,11 @@ begin
   case state is
     when IDLE =>
       if((c0ramdMemRead = '1') and (prevState = CORE1_ACCESS))then
-        nextState <= CORE0_ARBITER_READ;
+        nextState <= SNOOP_IN_CORE1;
       elsif((c0ramdMemWrite = '1') and (prevState = CORE1_ACCESS))then
         nextState <= CORE0_ARBITER_WRITE;
       elsif((c1ramdMemRead = '1') and (prevState = CORE0_ACCESS))then
-        nextState <= CORE1_ARBITER_READ;
+        nextState <= SNOOP_IN_CORE0;
       elsif((c1ramdMemWrite = '1') and (prevState = CORE0_ACCESS))then
         nextState <= CORE1_ARBITER_WRITE;
       elsif((c0ramiMemRead = '1') and (prevState = CORE1_ACCESS))then
@@ -113,6 +113,23 @@ begin
           nextPrevState <= CORE0_ACCESS;
         end if;
       end if;
+    
+    when SNOOP_IN_CORE0 =>
+--      if((c0_cocoFinishedSnooping = '1') and (c0_cocoSnoopHit)) and
+      nextPrevState <= CORE1_ACCESS;
+      if(c0_cocoSnoopHit = '1') then
+        nextState <= IDLE;
+      else
+        nextState <= CORE1_ARBITER_READ;
+      end if;
+      
+    when SNOOP_IN_CORE1 =>  
+      nextPrevState <= CORE0_ACCESS;
+      if(c1_cocoSnoopHit = '1') then
+        nextState <= IDLE;
+      else 
+        nextState <= CORE0_ARBITER_READ;
+      end if;
       
     when CORE0_ARBITER_READ =>
       nextPrevState <= CORE0_ACCESS;
@@ -122,7 +139,7 @@ begin
       
     when CORE0_ARBITER_WRITE =>
       nextPrevState <= CORE0_ACCESS;
-      if(arb_MemState = "10") then
+      if((arb_MemState = "10") or (arb_MemState = "00")) then
         nextState <= IDLE;
       end if;
       
@@ -144,8 +161,8 @@ begin
 end process cController_ns;
 
    -- Arbiter signals
-    arb_MemRead <= '1' when (((state = IDLE) and (prevState = CORE1_ACCESS) and ((c0ramdMemRead = '1') or (c0ramiMemRead = '1')))  or ((state = CORE0_ARBITER_READ) and ((c0ramdMemRead = '1') or (c0ramiMemRead = '1'))))
-                    else '1' when (((state = IDLE) and (prevState = CORE0_ACCESS) and ((c1ramdMemRead = '1') or (c1ramiMemRead = '1')))  or ((state = CORE1_ARBITER_READ) and ((c1ramdMemRead = '1') or (c1ramiMemRead = '1'))))
+    arb_MemRead <= '1' when (((state = IDLE) and (nextState /= SNOOP_IN_CORE0) and (nextState /= SNOOP_IN_CORE1) and (prevState = CORE1_ACCESS) and ((c0ramdMemRead = '1') or (c0ramiMemRead = '1')))  or ((state = CORE0_ARBITER_READ) and ((c0ramdMemRead = '1') or (c0ramiMemRead = '1'))))
+                    else '1' when (((state = IDLE) and (nextState /= SNOOP_IN_CORE0) and (nextState /= SNOOP_IN_CORE1) and (prevState = CORE0_ACCESS) and ((c1ramdMemRead = '1') or (c1ramiMemRead = '1')))  or ((state = CORE1_ARBITER_READ) and ((c1ramdMemRead = '1') or (c1ramiMemRead = '1'))))
                     else '0';
                       
     arb_MemWrite <= '1' when (((state = IDLE) and (prevState = CORE1_ACCESS) and (c0ramdMemWrite = '1')) or ((state = CORE0_ARBITER_WRITE) and (c0ramdMemWrite = '1')))
@@ -163,12 +180,22 @@ end process cController_ns;
                          else x"BAD4BAD4";
     
     -- signals to both dcaches
-    c0ramQ <= arb_MemDataRead;
-    c1ramQ <= arb_MemDataRead;
-    c0ramState <= arb_MemState when ((state = CORE0_ARBITER_READ) or (state = CORE0_ARBITER_WRITE)) else "01";
-    c1ramState <= arb_MemState when ((state = CORE1_ARBITER_READ) or (state = CORE1_ARBITER_WRITE)) else "01";
+    c0ramQ <= c1_cocoSnoopData when ((state = SNOOP_IN_CORE1) and (c1_cocoSnoopHit = '1')) else arb_MemDataRead;
+    c1ramQ <= c0_cocoSnoopData when ((state = SNOOP_IN_CORE0) and (c0_cocoSnoopHit = '1')) else arb_MemDataRead;
+    c0ramState <= "10" when ((state = SNOOP_IN_CORE1) and (c1_cocoSnoopHit = '1'))
+                  else arb_MemState when ((state = CORE0_ARBITER_READ) or (state = CORE0_ARBITER_WRITE)) 
+                  else "01";
+    c1ramState <= "10" when ((state = SNOOP_IN_CORE0) and (c0_cocoSnoopHit = '1'))
+                  else arb_MemState when ((state = CORE1_ARBITER_READ) or (state = CORE1_ARBITER_WRITE)) else "01";
     
-    --dMemSnoopAddrC1 <= x"00000000";
-    --dMemSnoopAddrC2 <= x"00000000";
+      -- SNOOP
+ 	  	 c0_cocoSnoopFlag <= '1' when (state = SNOOP_IN_CORE0) else '0';
+	  	 c0_cocoSnoopAddr <= (x"0000" & c1ramAddr);
+      -- MSI protocol     
+	  	 --c0_invalidateAddr : out std_logic_vector(31 downto 0);
+	  	 --c0_invalidateAddrFlag : out std_logic;
+
+	  	 c1_cocoSnoopFlag <= '1' when (state = SNOOP_IN_CORE1) else '0';
+	  	 c1_cocoSnoopAddr <= (x"0000" & c0ramAddr);
 
 end arch_coherencyController;

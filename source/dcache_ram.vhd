@@ -13,6 +13,10 @@ entity dcache_ram is
 		CLK					:	in	std_logic;
 		nReset			:	in	std_logic;
 		WrEn				:	in	std_logic;
+		snoopFlag : in std_logic;
+		snoopAddr : in std_logic_vector(31 downto 0);
+		snoopHit : out std_logic;
+		snoopData : out std_logic_vector(31 downto 0);
 		Tag					:	in	std_logic_vector (24 downto 0);
 		Index				:	in	std_logic_vector (03 downto 0);
 		WordOffset : in std_logic;
@@ -37,7 +41,7 @@ architecture struct of dcache_ram is
   signal tagArray : tagBits;
   type setBits is array (0 to 15) of std_logic_vector(63 downto 0); -- Word 0 = <63:32>, Word 1 = <31 downto 0>
   signal setArray : setBits;
-  signal indexInteger : integer range 0 to 15;
+  signal indexInteger, snoopIndexInteger : integer range 0 to 15;
   signal nextSetArray : std_logic_vector(63 downto 0);
 begin
 
@@ -94,5 +98,8 @@ Valid <= validArray(indexInteger);
 Hit <= '1' when ((Tag = tagArray(indexInteger)) and (validArray(indexInteger) = '1')) else '0';
 currentTag <= tagArray(indexInteger);
 
+snoopIndexInteger <= to_integer(unsigned(snoopAddr(6 downto 3))); -- convert the index to a integer so we can use it to look up values in the array
+snoopData <= setArray(snoopIndexInteger)(63 downto 32) when (snoopAddr(2) = '0') else setArray(snoopIndexInteger)(31 downto 0);
+snoopHit <= '1' when ((snoopFlag = '1') and (tagArray(snoopIndexInteger) = snoopAddr(31 downto 7)) and (validArray(snoopIndexInteger) = '1')) else '0';
 end struct;
 

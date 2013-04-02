@@ -27,7 +27,7 @@ begin
       present_val_programCounter <= x"00000000";
     elsif(rising_edge(clk)) then
       if(regWriteEnable = '1') then
-        if(next_val_instruction = x"BAD1BAD1") then
+        if((next_val_instruction = x"BAD1BAD1") or (next_val_instruction = x"BAD2BAD2") or (next_val_instruction = x"BAD3BAD3") or (next_val_instruction = x"BAD4BAD4") or (next_val_instruction = x"BAD5BAD5")) then
           present_val_instruction <= x"00000000";
         else
           present_val_instruction <= next_val_instruction;

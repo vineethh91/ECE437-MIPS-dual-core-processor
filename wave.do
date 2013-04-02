@@ -9,36 +9,49 @@ add wave -noupdate -radix hexadecimal /tb_cpu/DUT/theCPU/ramData
 add wave -noupdate -radix hexadecimal /tb_cpu/DUT/theCPU/ramAddr
 add wave -noupdate -radix hexadecimal /tb_cpu/DUT/theCPU/nReset
 add wave -noupdate -radix hexadecimal /tb_cpu/DUT/theCPU/halt
-add wave -noupdate -group cController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/clk
-add wave -noupdate -group cController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/nReset
-add wave -noupdate -group cController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/arb_MemRead
-add wave -noupdate -group cController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/arb_MemWrite
-add wave -noupdate -group cController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/arb_MemAddr
-add wave -noupdate -group cController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/arb_MemDataRead
-add wave -noupdate -group cController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/arb_MemDataWrite
-add wave -noupdate -group cController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/arb_MemState
-add wave -noupdate -group cController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c0ramAddr
-add wave -noupdate -group cController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c0ramData
-add wave -noupdate -group cController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c0ramWen
-add wave -noupdate -group cController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c0ramRen
-add wave -noupdate -group cController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c0ramdMemRead
-add wave -noupdate -group cController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c0ramdMemWrite
-add wave -noupdate -group cController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c0ramiMemRead
-add wave -noupdate -group cController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c0ramQ
-add wave -noupdate -group cController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c0ramState
-add wave -noupdate -group cController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c1ramAddr
-add wave -noupdate -group cController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c1ramData
-add wave -noupdate -group cController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c1ramWen
-add wave -noupdate -group cController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c1ramRen
-add wave -noupdate -group cController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c1ramdMemRead
-add wave -noupdate -group cController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c1ramdMemWrite
-add wave -noupdate -group cController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c1ramiMemRead
-add wave -noupdate -group cController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c1ramQ
-add wave -noupdate -group cController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c1ramState
-add wave -noupdate -group cController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/state
-add wave -noupdate -group cController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/nextState
-add wave -noupdate -group cController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/prevState
-add wave -noupdate -group cController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/nextPrevState
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/state
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/prevState
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/nextState
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/nextPrevState
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/nReset
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/clk
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c1ramiMemRead
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c1ramdMemWrite
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c1ramdMemRead
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c1ramWen
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c1ramState
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c1ramRen
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c1ramQ
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c1ramData
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c1ramAddr
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c1_invalidateAddrFlag
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c1_invalidateAddr
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c1_dCacheWrite
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c1_dCacheRead
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c1_dCacheDataWrite
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c1_dCacheAddr
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c1_cocoSnoopHit
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c1_cocoSnoopFlag
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c1_cocoSnoopData
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c1_cocoSnoopAddr
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c1_cocoFinishedSnooping
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c0_invalidateAddrFlag
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c0_invalidateAddr
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c0_dCacheWrite
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c0_dCacheRead
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c0_dCacheDataWrite
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c0_dCacheAddr
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c0_cocoSnoopHit
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c0_cocoSnoopFlag
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c0_cocoSnoopData
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c0_cocoSnoopAddr
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/c0_cocoFinishedSnooping
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/arb_MemWrite
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/arb_MemState
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/arb_MemRead
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/arb_MemDataWrite
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/arb_MemDataRead
+add wave -noupdate -expand -group coherenceController -radix hexadecimal /tb_cpu/DUT/theCPU/cControllerBlock/arb_MemAddr
 add wave -noupdate -expand -group core0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore0/CLK
 add wave -noupdate -expand -group core0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore0/nReset
 add wave -noupdate -expand -group core0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore0/halt
@@ -245,6 +258,11 @@ add wave -noupdate -expand -group core0 -expand -group dcache -radix hexadecimal
 add wave -noupdate -expand -group core0 -expand -group dcache -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore0/dcacheBlock/invalidateThisCoreLinkReg
 add wave -noupdate -expand -group core0 -expand -group dcache -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore0/dcacheBlock/invalidateOtherCoreLinkRegAddr
 add wave -noupdate -expand -group core0 -expand -group dcache -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore0/dcacheBlock/invalidateOtherCoreLinkReg
+add wave -noupdate -expand -group core0 -expand -group dcache -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore0/dcacheBlock/cocoSnoopHit
+add wave -noupdate -expand -group core0 -expand -group dcache -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore0/dcacheBlock/cocoSnoopFlag
+add wave -noupdate -expand -group core0 -expand -group dcache -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore0/dcacheBlock/cocoSnoopData
+add wave -noupdate -expand -group core0 -expand -group dcache -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore0/dcacheBlock/cocoSnoopAddr
+add wave -noupdate -expand -group core0 -expand -group dcache -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore0/dcacheBlock/cocoFinishedSnooping
 add wave -noupdate -expand -group core0 -expand -group dcache -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore0/dcacheBlock/DCACHECTRL/LLSC_flag
 add wave -noupdate -expand -group core0 -expand -group dcache -expand -group WAY0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore0/dcacheBlock/DCACHERAM_WAY0/CLK
 add wave -noupdate -expand -group core0 -expand -group dcache -expand -group WAY0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore0/dcacheBlock/DCACHERAM_WAY0/nReset
@@ -578,46 +596,51 @@ add wave -noupdate -expand -group core1 -expand -group dcache -radix hexadecimal
 add wave -noupdate -expand -group core1 -expand -group dcache -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/invalidateThisCoreLinkReg
 add wave -noupdate -expand -group core1 -expand -group dcache -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/invalidateOtherCoreLinkRegAddr
 add wave -noupdate -expand -group core1 -expand -group dcache -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/invalidateOtherCoreLinkReg
-add wave -noupdate -expand -group core1 -expand -group dcache -group WAY0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/CLK
-add wave -noupdate -expand -group core1 -expand -group dcache -group WAY0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/nReset
-add wave -noupdate -expand -group core1 -expand -group dcache -group WAY0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/WrEn
-add wave -noupdate -expand -group core1 -expand -group dcache -group WAY0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/Tag
-add wave -noupdate -expand -group core1 -expand -group dcache -group WAY0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/Index
-add wave -noupdate -expand -group core1 -expand -group dcache -group WAY0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/WordOffset
-add wave -noupdate -expand -group core1 -expand -group dcache -group WAY0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/InputWord
-add wave -noupdate -expand -group core1 -expand -group dcache -group WAY0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/InputWordOffset
-add wave -noupdate -expand -group core1 -expand -group dcache -group WAY0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/MEM_memWrite
-add wave -noupdate -expand -group core1 -expand -group dcache -group WAY0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/OutputWord
-add wave -noupdate -expand -group core1 -expand -group dcache -group WAY0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/currentTag
-add wave -noupdate -expand -group core1 -expand -group dcache -group WAY0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/Dirty
-add wave -noupdate -expand -group core1 -expand -group dcache -group WAY0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/Valid
-add wave -noupdate -expand -group core1 -expand -group dcache -group WAY0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/Hit
-add wave -noupdate -expand -group core1 -expand -group dcache -group WAY0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/validArray
-add wave -noupdate -expand -group core1 -expand -group dcache -group WAY0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/dirtyArray
-add wave -noupdate -expand -group core1 -expand -group dcache -group WAY0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/tagArray
-add wave -noupdate -expand -group core1 -expand -group dcache -group WAY0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/setArray
-add wave -noupdate -expand -group core1 -expand -group dcache -group WAY0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/indexInteger
-add wave -noupdate -expand -group core1 -expand -group dcache -group WAY0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/nextSetArray
-add wave -noupdate -expand -group core1 -expand -group dcache -group WAY1 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/CLK
-add wave -noupdate -expand -group core1 -expand -group dcache -group WAY1 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/nReset
-add wave -noupdate -expand -group core1 -expand -group dcache -group WAY1 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/WrEn
-add wave -noupdate -expand -group core1 -expand -group dcache -group WAY1 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/Tag
-add wave -noupdate -expand -group core1 -expand -group dcache -group WAY1 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/Index
-add wave -noupdate -expand -group core1 -expand -group dcache -group WAY1 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/WordOffset
-add wave -noupdate -expand -group core1 -expand -group dcache -group WAY1 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/InputWord
-add wave -noupdate -expand -group core1 -expand -group dcache -group WAY1 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/InputWordOffset
-add wave -noupdate -expand -group core1 -expand -group dcache -group WAY1 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/MEM_memWrite
-add wave -noupdate -expand -group core1 -expand -group dcache -group WAY1 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/OutputWord
-add wave -noupdate -expand -group core1 -expand -group dcache -group WAY1 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/currentTag
-add wave -noupdate -expand -group core1 -expand -group dcache -group WAY1 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/Dirty
-add wave -noupdate -expand -group core1 -expand -group dcache -group WAY1 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/Valid
-add wave -noupdate -expand -group core1 -expand -group dcache -group WAY1 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/Hit
-add wave -noupdate -expand -group core1 -expand -group dcache -group WAY1 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/validArray
-add wave -noupdate -expand -group core1 -expand -group dcache -group WAY1 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/dirtyArray
-add wave -noupdate -expand -group core1 -expand -group dcache -group WAY1 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/tagArray
-add wave -noupdate -expand -group core1 -expand -group dcache -group WAY1 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/setArray
-add wave -noupdate -expand -group core1 -expand -group dcache -group WAY1 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/indexInteger
-add wave -noupdate -expand -group core1 -expand -group dcache -group WAY1 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/nextSetArray
+add wave -noupdate -expand -group core1 -expand -group dcache -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/cocoSnoopHit
+add wave -noupdate -expand -group core1 -expand -group dcache -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/cocoSnoopFlag
+add wave -noupdate -expand -group core1 -expand -group dcache -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/cocoSnoopData
+add wave -noupdate -expand -group core1 -expand -group dcache -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/cocoSnoopAddr
+add wave -noupdate -expand -group core1 -expand -group dcache -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/cocoFinishedSnooping
+add wave -noupdate -expand -group core1 -expand -group dcache -expand -group WAY0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/CLK
+add wave -noupdate -expand -group core1 -expand -group dcache -expand -group WAY0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/nReset
+add wave -noupdate -expand -group core1 -expand -group dcache -expand -group WAY0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/WrEn
+add wave -noupdate -expand -group core1 -expand -group dcache -expand -group WAY0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/Tag
+add wave -noupdate -expand -group core1 -expand -group dcache -expand -group WAY0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/Index
+add wave -noupdate -expand -group core1 -expand -group dcache -expand -group WAY0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/WordOffset
+add wave -noupdate -expand -group core1 -expand -group dcache -expand -group WAY0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/InputWord
+add wave -noupdate -expand -group core1 -expand -group dcache -expand -group WAY0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/InputWordOffset
+add wave -noupdate -expand -group core1 -expand -group dcache -expand -group WAY0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/MEM_memWrite
+add wave -noupdate -expand -group core1 -expand -group dcache -expand -group WAY0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/OutputWord
+add wave -noupdate -expand -group core1 -expand -group dcache -expand -group WAY0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/currentTag
+add wave -noupdate -expand -group core1 -expand -group dcache -expand -group WAY0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/Dirty
+add wave -noupdate -expand -group core1 -expand -group dcache -expand -group WAY0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/Valid
+add wave -noupdate -expand -group core1 -expand -group dcache -expand -group WAY0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/Hit
+add wave -noupdate -expand -group core1 -expand -group dcache -expand -group WAY0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/validArray
+add wave -noupdate -expand -group core1 -expand -group dcache -expand -group WAY0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/dirtyArray
+add wave -noupdate -expand -group core1 -expand -group dcache -expand -group WAY0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/tagArray
+add wave -noupdate -expand -group core1 -expand -group dcache -expand -group WAY0 -radix hexadecimal -childformat {{/tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/setArray(0) -radix hexadecimal} {/tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/setArray(1) -radix hexadecimal} {/tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/setArray(2) -radix hexadecimal} {/tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/setArray(3) -radix hexadecimal} {/tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/setArray(4) -radix hexadecimal} {/tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/setArray(5) -radix hexadecimal} {/tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/setArray(6) -radix hexadecimal} {/tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/setArray(7) -radix hexadecimal} {/tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/setArray(8) -radix hexadecimal} {/tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/setArray(9) -radix hexadecimal} {/tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/setArray(10) -radix hexadecimal} {/tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/setArray(11) -radix hexadecimal} {/tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/setArray(12) -radix hexadecimal} {/tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/setArray(13) -radix hexadecimal} {/tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/setArray(14) -radix hexadecimal} {/tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/setArray(15) -radix hexadecimal}} -expand -subitemconfig {/tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/setArray(0) {-height 16 -radix hexadecimal} /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/setArray(1) {-height 16 -radix hexadecimal} /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/setArray(2) {-height 16 -radix hexadecimal} /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/setArray(3) {-height 16 -radix hexadecimal} /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/setArray(4) {-height 16 -radix hexadecimal} /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/setArray(5) {-height 16 -radix hexadecimal} /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/setArray(6) {-height 16 -radix hexadecimal} /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/setArray(7) {-height 16 -radix hexadecimal} /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/setArray(8) {-height 16 -radix hexadecimal} /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/setArray(9) {-height 16 -radix hexadecimal} /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/setArray(10) {-height 16 -radix hexadecimal} /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/setArray(11) {-height 16 -radix hexadecimal} /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/setArray(12) {-height 16 -radix hexadecimal} /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/setArray(13) {-height 16 -radix hexadecimal} /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/setArray(14) {-height 16 -radix hexadecimal} /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/setArray(15) {-height 16 -radix hexadecimal}} /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/setArray
+add wave -noupdate -expand -group core1 -expand -group dcache -expand -group WAY0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/indexInteger
+add wave -noupdate -expand -group core1 -expand -group dcache -expand -group WAY0 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY0/nextSetArray
+add wave -noupdate -expand -group core1 -expand -group dcache -expand -group WAY1 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/CLK
+add wave -noupdate -expand -group core1 -expand -group dcache -expand -group WAY1 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/nReset
+add wave -noupdate -expand -group core1 -expand -group dcache -expand -group WAY1 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/WrEn
+add wave -noupdate -expand -group core1 -expand -group dcache -expand -group WAY1 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/Tag
+add wave -noupdate -expand -group core1 -expand -group dcache -expand -group WAY1 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/Index
+add wave -noupdate -expand -group core1 -expand -group dcache -expand -group WAY1 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/WordOffset
+add wave -noupdate -expand -group core1 -expand -group dcache -expand -group WAY1 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/InputWord
+add wave -noupdate -expand -group core1 -expand -group dcache -expand -group WAY1 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/InputWordOffset
+add wave -noupdate -expand -group core1 -expand -group dcache -expand -group WAY1 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/MEM_memWrite
+add wave -noupdate -expand -group core1 -expand -group dcache -expand -group WAY1 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/OutputWord
+add wave -noupdate -expand -group core1 -expand -group dcache -expand -group WAY1 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/currentTag
+add wave -noupdate -expand -group core1 -expand -group dcache -expand -group WAY1 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/Dirty
+add wave -noupdate -expand -group core1 -expand -group dcache -expand -group WAY1 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/Valid
+add wave -noupdate -expand -group core1 -expand -group dcache -expand -group WAY1 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/Hit
+add wave -noupdate -expand -group core1 -expand -group dcache -expand -group WAY1 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/validArray
+add wave -noupdate -expand -group core1 -expand -group dcache -expand -group WAY1 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/dirtyArray
+add wave -noupdate -expand -group core1 -expand -group dcache -expand -group WAY1 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/tagArray
+add wave -noupdate -expand -group core1 -expand -group dcache -expand -group WAY1 -radix hexadecimal -childformat {{/tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/setArray(0) -radix hexadecimal} {/tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/setArray(1) -radix hexadecimal} {/tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/setArray(2) -radix hexadecimal} {/tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/setArray(3) -radix hexadecimal} {/tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/setArray(4) -radix hexadecimal} {/tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/setArray(5) -radix hexadecimal} {/tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/setArray(6) -radix hexadecimal} {/tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/setArray(7) -radix hexadecimal} {/tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/setArray(8) -radix hexadecimal} {/tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/setArray(9) -radix hexadecimal} {/tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/setArray(10) -radix hexadecimal} {/tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/setArray(11) -radix hexadecimal} {/tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/setArray(12) -radix hexadecimal} {/tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/setArray(13) -radix hexadecimal} {/tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/setArray(14) -radix hexadecimal} {/tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/setArray(15) -radix hexadecimal}} -expand -subitemconfig {/tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/setArray(0) {-height 16 -radix hexadecimal} /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/setArray(1) {-height 16 -radix hexadecimal} /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/setArray(2) {-height 16 -radix hexadecimal} /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/setArray(3) {-height 16 -radix hexadecimal} /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/setArray(4) {-height 16 -radix hexadecimal} /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/setArray(5) {-height 16 -radix hexadecimal} /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/setArray(6) {-height 16 -radix hexadecimal} /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/setArray(7) {-height 16 -radix hexadecimal} /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/setArray(8) {-height 16 -radix hexadecimal} /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/setArray(9) {-height 16 -radix hexadecimal} /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/setArray(10) {-height 16 -radix hexadecimal} /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/setArray(11) {-height 16 -radix hexadecimal} /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/setArray(12) {-height 16 -radix hexadecimal} /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/setArray(13) {-height 16 -radix hexadecimal} /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/setArray(14) {-height 16 -radix hexadecimal} /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/setArray(15) {-height 16 -radix hexadecimal}} /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/setArray
+add wave -noupdate -expand -group core1 -expand -group dcache -expand -group WAY1 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/indexInteger
+add wave -noupdate -expand -group core1 -expand -group dcache -expand -group WAY1 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/DCACHERAM_WAY1/nextSetArray
 add wave -noupdate -expand -group core1 -expand -group dcache -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/storeWordOffset
 add wave -noupdate -expand -group core1 -expand -group dcache -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/newHitForHitCounter
 add wave -noupdate -expand -group core1 -expand -group dcache -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/dcacheBlock/nReset
@@ -731,7 +754,7 @@ add wave -noupdate -expand -group core1 -radix hexadecimal /tb_cpu/DUT/theCPU/My
 add wave -noupdate -expand -group core1 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/hazardDetectionPCWriteEnable
 add wave -noupdate -expand -group core1 -radix hexadecimal /tb_cpu/DUT/theCPU/MyAwesomeCore1/hazardDetectionMux21to21Enable
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {14045 ns} 1} {{Cursor 2} {17283 ns} 1} {{Cursor 3} {13732 ns} 0}
+WaveRestoreCursors {{Cursor 5} {17804 ns} 1} {{Cursor 4} {17297 ns} 1} {{Cursor 5} {26496 ns} 0}
 quietly wave cursor active 3
 configure wave -namecolwidth 279
 configure wave -valuecolwidth 152
@@ -747,4 +770,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {11633 ns} {16221 ns}
+WaveRestoreZoom {23251 ns} {26496 ns}
