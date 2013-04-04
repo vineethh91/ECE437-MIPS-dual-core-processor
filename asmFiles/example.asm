@@ -9,6 +9,8 @@
 	org		0x0000							# first processor p0
 	ori		$sp, $zero, 0x3ffc					# stack
 	jal		mainp0							# go to program
+	jal		mainp1							# go to program
+	jal		mainp0							# go to program
 	halt
 
 # pass in an address to lock function in argument register 0
@@ -53,6 +55,8 @@ l1:
 #----------------------------------------------------------
 	org		0x200							# second processor p1
 	ori		$sp, $zero, 0x7ffc					# stack
+	jal		mainp1							# go to program
+	jal		mainp0							# go to program
 	jal		mainp1							# go to program
 	halt
 
