@@ -56,6 +56,8 @@ architecture struct of dcache is
 		CLK					:	in	std_logic;
 		nReset			:	in	std_logic;
 		WrEn				:	in	std_logic;
+    assertValidity : in std_logic;
+
    	snoopFlag : in std_logic;
 		snoopAddr : in std_logic_vector(31 downto 0);
 		snoopHit : out std_logic;
@@ -98,6 +100,7 @@ architecture struct of dcache is
 		WAY1_outputWord					:	in	std_logic_vector(31 downto 0);
     WAY0_currentTag					:	in	std_logic_vector(24 downto 0);
 		WAY1_currentTag					:	in	std_logic_vector(24 downto 0);
+    assertValidity : out std_logic;
 
     LLSC_flag : in std_logic;
     linkRegisterMatch : out std_logic;
@@ -160,6 +163,8 @@ architecture struct of dcache is
   signal	hitCounterCount : std_logic_vector(31 downto 0);
   signal	hitCounterAddr : std_logic_vector(15 downto 0);
  	signal linkRegMatch : std_logic;
+  signal WAYassertValidity : std_logic;
+
 begin
 --  dMemWait       <= adMemWait;
 --  adMemRead      <= dMemRead;
@@ -173,6 +178,8 @@ begin
 		CLK,
 		nReset,
 		WAY0_tWrEn,
+		WAYassertValidity,
+	
     cocoSnoopFlag,
     cocoSnoopAddr,
     WAY0_snoopHit,
@@ -198,6 +205,8 @@ begin
 		CLK,
 		nReset,
 		WAY1_tWrEn,
+		WAYassertValidity,
+	
     cocoSnoopFlag,
     cocoSnoopAddr,
     WAY1_snoopHit,
@@ -238,7 +247,8 @@ begin
     WAY1_readWord,
     WAY0currentTag,
     WAY1currentTag,
-    
+		WAYassertValidity,
+		
     MEMStage_LLSC_flag,
     linkRegMatch,
   		invalidateThisCoreLinkReg,

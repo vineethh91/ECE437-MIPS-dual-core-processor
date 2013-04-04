@@ -13,6 +13,8 @@ entity dcache_ram is
 		CLK					:	in	std_logic;
 		nReset			:	in	std_logic;
 		WrEn				:	in	std_logic;
+    assertValidity : in std_logic;
+
 		snoopFlag : in std_logic;
 		snoopAddr : in std_logic_vector(31 downto 0);
 		snoopHit : out std_logic;
@@ -63,7 +65,9 @@ begin
 	elsif rising_edge(CLK) then
     dirtyArray <= nextDirtyArray;
 		if WrEn = '1' then
-		 	validArray(indexInteger) <= '1';
+		 	if(assertValidity = '1') then
+    		 	validArray(indexInteger) <= '1';
+  		 	end if;
 		 	tagArray(indexInteger) <= Tag;
 		 	setArray(indexInteger) <= nextSetArray;
 		end if;

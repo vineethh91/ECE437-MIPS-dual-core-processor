@@ -30,7 +30,8 @@ entity dcache_ctrl is
 		WAY1_outputWord					:	in	std_logic_vector(31 downto 0);
     WAY0_currentTag					:	in	std_logic_vector(24 downto 0);
 		WAY1_currentTag					:	in	std_logic_vector(24 downto 0);
-    
+    assertValidity : out std_logic;
+        
     LLSC_flag : in std_logic;
     linkRegisterMatch : out std_logic;
 		invalidateLinkReg : in std_logic;
@@ -301,5 +302,8 @@ indexInteger <= to_integer(unsigned(MEMStage_Addr(6 downto 3))); -- convert the 
 		                       else '0';
 
 		hitCounterStoreAddress <= x"0000" & HIT_COUNTER_STORE_ADDRESS;
+		
+    assertValidity <= '1' when ((state = FETCH_WORD1) and (arbiterMemWait = '0'))
+                           else '0';
 end;
 
