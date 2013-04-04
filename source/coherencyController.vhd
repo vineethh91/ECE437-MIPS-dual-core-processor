@@ -191,11 +191,18 @@ end process cController_ns;
       -- SNOOP
  	  	 c0_cocoSnoopFlag <= '1' when (state = SNOOP_IN_CORE0) else '0';
 	  	 c0_cocoSnoopAddr <= (x"0000" & c1ramAddr);
-      -- MSI protocol     
-	  	 --c0_invalidateAddr : out std_logic_vector(31 downto 0);
-	  	 --c0_invalidateAddrFlag : out std_logic;
 
 	  	 c1_cocoSnoopFlag <= '1' when (state = SNOOP_IN_CORE1) else '0';
 	  	 c1_cocoSnoopAddr <= (x"0000" & c0ramAddr);
 
+
+    -- Invalidation logic
+    c1_invalidateAddr <= c0_dCacheAddr;
+    c1_invalidateAddrFlag <= '1' when ((c0_dCacheWrite = '1') and (c0ramdMemRead = '0') and (c0ramdMemWrite = '0'))  -- invalidate it in core1 if its a write hit in core0
+                             else '0';
+    
+    c0_invalidateAddr <= c1_dCacheAddr;
+    c0_invalidateAddrFlag <= '1' when ((c1_dCacheWrite = '1') and (c1ramdMemRead = '0') and (c1ramdMemWrite = '0'))  -- invalidate it in core0 if its a write hit in core1
+                             else '0';
+    
 end arch_coherencyController;

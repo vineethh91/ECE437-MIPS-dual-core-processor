@@ -17,6 +17,10 @@ entity dcache_ram is
 		snoopAddr : in std_logic_vector(31 downto 0);
 		snoopHit : out std_logic;
 		snoopData : out std_logic_vector(31 downto 0);
+    -- MSI protocol     
+    invalidateAddr : in std_logic_vector(31 downto 0);
+    invalidateAddrFlag : in std_logic;
+
 		Tag					:	in	std_logic_vector (24 downto 0);
 		Index				:	in	std_logic_vector (03 downto 0);
 		WordOffset : in std_logic;
@@ -41,7 +45,7 @@ architecture struct of dcache_ram is
   signal tagArray : tagBits;
   type setBits is array (0 to 15) of std_logic_vector(63 downto 0); -- Word 0 = <63:32>, Word 1 = <31 downto 0>
   signal setArray : setBits;
-  signal indexInteger, snoopIndexInteger : integer range 0 to 15;
+  signal indexInteger, snoopIndexInteger, invalidateAddrIndexInteger : integer range 0 to 15;
   signal nextSetArray : std_logic_vector(63 downto 0);
 begin
 
@@ -63,17 +67,25 @@ begin
 		 	tagArray(indexInteger) <= Tag;
 		 	setArray(indexInteger) <= nextSetArray;
 		end if;
+		if(invalidateAddrFlag = '1') then
+		  if((tagArray(invalidateAddrIndexInteger) = invalidateAddr(31 downto 7)) and (validArray(invalidateAddrIndexInteger) = '1')) then
+		    validArray(invalidateAddrIndexInteger) <= '0';  
+		  end if;
+		end if;
 	end if;
 end process cache_reg;
 
-dirtyBitsProcess : process( CLK, nReset, WrEn)
+dirtyBitsProcess : process( CLK, nReset, WrEn, invalidateAddrFlag, invalidateAddr)
 begin
   if(nReset = '0') then
     nextDirtyArray <= dirtyArray;  
   elsif((validArray(indexInteger) = '1') and (MEM_memWrite = '1')) then
     nextDirtyArray(indexInteger) <= '1';
-  end if;
-  
+--  elsif(invalidateAddrFlag = '1') then
+--	  if(tagArray(invalidateAddrIndexInteger) = invalidateAddr(31 downto 7)) then
+--		    nextDirtyArray(invalidateAddrIndexInteger) <= '0';  
+--		end if;
+	end if;
 end process;
 
 nextSetArray <= (setArray(indexInteger)(63 downto 32) & InputWord) when (InputWordOffset = '1') else (InputWord & setArray(indexInteger)(31 downto 0));
@@ -97,6 +109,8 @@ Dirty <= dirtyArray(indexInteger);
 Valid <= validArray(indexInteger);
 Hit <= '1' when ((Tag = tagArray(indexInteger)) and (validArray(indexInteger) = '1')) else '0';
 currentTag <= tagArray(indexInteger);
+
+invalidateAddrIndexInteger <= to_integer(unsigned(invalidateAddr(6 downto 3)));
 
 snoopIndexInteger <= to_integer(unsigned(snoopAddr(6 downto 3))); -- convert the index to a integer so we can use it to look up values in the array
 snoopData <= setArray(snoopIndexInteger)(63 downto 32) when (snoopAddr(2) = '0') else setArray(snoopIndexInteger)(31 downto 0);

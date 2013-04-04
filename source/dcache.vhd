@@ -60,6 +60,10 @@ architecture struct of dcache is
 		snoopAddr : in std_logic_vector(31 downto 0);
 		snoopHit : out std_logic;
 		snoopData : out std_logic_vector(31 downto 0);
+    -- MSI protocol     
+    invalidateAddr : in std_logic_vector(31 downto 0);
+    invalidateAddrFlag : in std_logic;
+
     Tag					:	in	std_logic_vector (24 downto 0);
 		Index				:	in	std_logic_vector (03 downto 0);
 		WordOffset : in std_logic;
@@ -173,6 +177,10 @@ begin
     cocoSnoopAddr,
     WAY0_snoopHit,
     WAY0_snoopData,
+    -- MSI protocol     
+    invalidateAddr,
+    invalidateAddrFlag,
+
 		dMemAddr (31 downto 7),		-- tag to look for
 		cacheIndex,			-- set to look in
 		cacheWordOffset,
@@ -194,6 +202,10 @@ begin
     cocoSnoopAddr,
     WAY1_snoopHit,
     WAY1_snoopData,
+    -- MSI protocol     
+    invalidateAddr,
+    invalidateAddrFlag,
+    
 		dMemAddr (31 downto 7),		-- tag to look for
 		cacheIndex,			-- set to look in
 		cacheWordOffset,
