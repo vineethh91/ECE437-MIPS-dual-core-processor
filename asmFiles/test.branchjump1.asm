@@ -37,3 +37,8 @@ jmpR:
 	nop
 	nop
 	halt
+
+    org 0x0200
+    nop
+    nop
+    halt

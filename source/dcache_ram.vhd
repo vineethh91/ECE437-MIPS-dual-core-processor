@@ -61,9 +61,9 @@ begin
 		  setArray(i) <= (others => '0');
 		end loop;
 	elsif rising_edge(CLK) then
+    dirtyArray <= nextDirtyArray;
 		if WrEn = '1' then
 		 	validArray(indexInteger) <= '1';
-      dirtyArray <= nextDirtyArray;
 		 	tagArray(indexInteger) <= Tag;
 		 	setArray(indexInteger) <= nextSetArray;
 		end if;
@@ -77,14 +77,15 @@ end process cache_reg;
 
 dirtyBitsProcess : process( CLK, nReset, WrEn, invalidateAddrFlag, invalidateAddr)
 begin
+  nextDirtyArray <= dirtyArray;
   if(nReset = '0') then
     nextDirtyArray <= dirtyArray;  
   elsif((validArray(indexInteger) = '1') and (MEM_memWrite = '1')) then
     nextDirtyArray(indexInteger) <= '1';
---  elsif(invalidateAddrFlag = '1') then
---	  if(tagArray(invalidateAddrIndexInteger) = invalidateAddr(31 downto 7)) then
---		    nextDirtyArray(invalidateAddrIndexInteger) <= '0';  
---		end if;
+  elsif(invalidateAddrFlag = '1') then
+	  if(tagArray(invalidateAddrIndexInteger) = invalidateAddr(31 downto 7)) then
+		    nextDirtyArray(invalidateAddrIndexInteger) <= '0';  
+		end if;
 	end if;
 end process;
 
@@ -100,7 +101,6 @@ begin
 end process cache_lookup;
 
 indexInteger <= to_integer(unsigned(Index)); -- convert the index to a integer so we can use it to look up values in the array
-
 
   
 --OutputWord <= setArray(indexInteger)(63 downto 32) when ((WordOffset = '0') and (validArray(indexInteger) = '1') and (tagArray(indexInteger) = Tag)) else setArray(indexInteger)(31 downto 0) when ((WordOffset = '1') and (validArray(indexInteger) = '1') and (tagArray(indexInteger) = Tag)) else x"BAD1BAD1";

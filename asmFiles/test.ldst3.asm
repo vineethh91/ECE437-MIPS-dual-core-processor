@@ -10,6 +10,11 @@
 	sw		$4,0($1)
 	halt			# that's all
 
+    org 0x0200
+    nop 
+    nop
+    halt
+
 	org		0x0F00
 	cfw		0x7337
 	cfw		0x2701

@@ -21,3 +21,8 @@ braR:
 jmpR:
 	bne		$ra, $3, end
 	halt
+
+    org 0x0200
+    nop
+    nop
+    halt

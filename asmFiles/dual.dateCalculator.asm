@@ -66,6 +66,10 @@ EXIT_LOOP_1:
 	push $4
 	halt
 
+    org 0x0200
+    nop
+    nop
+    halt
 	
 
 

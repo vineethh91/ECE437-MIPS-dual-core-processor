@@ -258,3 +258,8 @@ main:
         sll $zero,$zero,0
 
         halt
+
+ org 0x0200
+    nop
+    nop
+    halt

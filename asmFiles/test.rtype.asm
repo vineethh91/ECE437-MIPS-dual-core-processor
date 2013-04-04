@@ -35,3 +35,9 @@
 	sw		$12,36($21)
 	sw		$13,0($22)
 	halt	# that's all
+
+    org 0x0200
+    nop 
+    nop
+    halt
+

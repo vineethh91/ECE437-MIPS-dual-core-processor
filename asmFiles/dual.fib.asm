@@ -31,5 +31,10 @@ start:
 #uncomment to work with the simulator (sim)
 # comment to use mmio
 
+    org 0x0200
+    nop
+    nop
+    halt
+
 	org	0x0F00
 	cfw	22

@@ -77,7 +77,8 @@ architecture struct of dcache_ctrl is
   signal prevMemStageMemWrite, prevMemStageMemRead : std_logic;
   signal hitCounterEn, nextHitCounterEn : std_logic;
   signal linkRegister : std_logic_vector(31 downto 0);
-  
+  signal dumpInvalidateAddr, nextDumpInvalidateAddr : std_logic_vector(31 downto 0);
+  signal dumpInvalidateFlag, nextDumpInvalidateFlag : std_logic; 
 begin
 
 cctrl_state: process(CLK, nReset)
@@ -91,6 +92,8 @@ begin
     prevMemStageMemRead <= '0';
     hitCounterEn <= '0';
     linkRegister <= (others => '0');
+    dumpInvalidateAddr <= (others => '0');
+    dumpInvalidateFlag <= '0';
 	elsif rising_edge(CLK) then
     state <= nextState;
     LEAST_RECENTLY_USED <= NEXT_LRU;
@@ -107,6 +110,8 @@ begin
     elsif((MEMStage_memWrite = '1') and (linkRegister = MEMStage_Addr)) then
       linkRegister <= x"00000000";
     end if;
+    dumpInvalidateAddr <= nextDumpInvalidateAddr;
+    dumpInvalidateFlag <= nextDumpInvalidateFlag;
 	end if;
 end process cctrl_state;
 
@@ -119,7 +124,8 @@ begin
   nextState <= state;
   NEXT_LRU <= LEAST_RECENTLY_USED;
   nextDumpIndexCount <= dumpIndexCount;
-  
+  nextDumpInvalidateAddr <= dumpInvalidateAddr;
+  nextDumpInvalidateFlag <= '0';
   case state is
     when IDLE =>
       nextHitCounterEn <= '1';
@@ -167,6 +173,8 @@ begin
         nextState <= DUMP_WAY1_WORD0;
       elsif(arbiterMemWait = '0') then
         nextState <= DUMP_WAY1_WORD0;
+        nextDumpInvalidateAddr <= DUMP_WAY0_WORD0_AddrSignal;
+        nextDumpInvalidateFlag <= '1';
       end if;
       
     when DUMP_WAY1_WORD0 =>
@@ -174,6 +182,8 @@ begin
         nextState <= DUMP_WAY0_WORD1;
       elsif(arbiterMemWait = '0') then
         nextState <= DUMP_WAY0_WORD1;
+        nextDumpInvalidateAddr <= DUMP_WAY1_WORD0_AddrSignal;
+        nextDumpInvalidateFlag <= '1';
       end if;
     
     when DUMP_WAY0_WORD1 =>
@@ -181,14 +191,20 @@ begin
         nextState <= DUMP_WAY1_WORD1;
       elsif(arbiterMemWait = '0') then
         nextState <= DUMP_WAY1_WORD1;
+        nextDumpInvalidateAddr <= DUMP_WAY0_WORD1_AddrSignal;
+        nextDumpInvalidateFlag <= '1';
       end if;
       
     when DUMP_WAY1_WORD1 =>
       if((arbiterMemWait = '0') and (dumpIndexCount /= "1111")) then
         nextDumpIndexCount <= std_logic_vector(unsigned(dumpIndexCount) + 1);
         nextState <= DUMP_WAY0_WORD0;
+        nextDumpInvalidateAddr <= DUMP_WAY1_WORD1_AddrSignal;
+        nextDumpInvalidateFlag <= '1';
       elsif((arbiterMemWait = '0') and (dumpIndexCount = "1111")) then
         nextState <= DUMP_FINISHED;--DUMP_HIT_COUNT;
+        nextDumpInvalidateAddr <= DUMP_WAY1_WORD1_AddrSignal;
+        nextDumpInvalidateFlag <= '1';
       elsif((WAY1_Dirty = '0') and (dumpIndexCount /= "1111")) then
         nextDumpIndexCount <= std_logic_vector(unsigned(dumpIndexCount) + 1);
         nextState <= DUMP_WAY0_WORD0;

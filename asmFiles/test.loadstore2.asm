@@ -20,6 +20,12 @@
 	sw		$4,0($2)
 	sw		$3,4($2)
 
+    org 0x0200
+    nop 
+    nop
+    halt
+
+
 	org		0x00F0
 	cfw		0x7337
 	cfw		0x2701
