@@ -108,7 +108,9 @@ indexInteger <= to_integer(unsigned(Index)); -- convert the index to a integer s
 
   
 --OutputWord <= setArray(indexInteger)(63 downto 32) when ((WordOffset = '0') and (validArray(indexInteger) = '1') and (tagArray(indexInteger) = Tag)) else setArray(indexInteger)(31 downto 0) when ((WordOffset = '1') and (validArray(indexInteger) = '1') and (tagArray(indexInteger) = Tag)) else x"BAD1BAD1";
-OutputWord <= setArray(indexInteger)(63 downto 32) when ((WordOffset = '0') and (validArray(indexInteger) = '1')) else setArray(indexInteger)(31 downto 0);
+OutputWord <= setArray(indexInteger)(63 downto 32) when ((WordOffset = '0') and (validArray(indexInteger) = '1')) 
+              else setArray(indexInteger)(31 downto 0) when ((WordOffset = '1') and (validArray(indexInteger) = '1'))
+              else x"BAD7BAD7";
 Dirty <= dirtyArray(indexInteger);
 Valid <= validArray(indexInteger);
 Hit <= '1' when ((Tag = tagArray(indexInteger)) and (validArray(indexInteger) = '1')) else '0';

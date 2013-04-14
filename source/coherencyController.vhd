@@ -75,6 +75,10 @@ entity coherencyController is
 architecture arch_coherencyController of coherencyController is
   type state_type is (IDLE, CORE0_ARBITER_READ, CORE0_ARBITER_WRITE, CORE1_ARBITER_READ, CORE1_ARBITER_WRITE, CORE0_ACCESS, CORE1_ACCESS, SNOOP_IN_CORE1, SNOOP_IN_CORE0);
   signal state, nextState, prevState, nextPrevState : state_type;
+  signal fetchWordC0Signal, nextFetchWordC0Signal : std_logic;
+  signal fetchWordC1Signal, nextFetchWordC1Signal : std_logic;
+  signal core0Addr : std_logic_vector(31 downto 0);
+  signal core1Addr : std_logic_vector(31 downto 0);
 begin
 
 cController_state: process(CLK, nReset)
@@ -82,9 +86,17 @@ begin
 	if (nReset = '0') then
     state <= IDLE;
     prevState <= CORE1_ACCESS;
+    fetchWordC0Signal <= '0';
+    fetchWordC1Signal <= '0';
+    core0Addr <= x"00000000";
+    core1Addr <= x"00000000";
   elsif rising_edge(CLK) then
     state <= nextState;
     prevState <= nextPrevState;
+    fetchWordC0Signal <= nextFetchWordC0Signal;
+    fetchWordC1Signal <= nextFetchWordC1Signal;
+    core0Addr <= c0_dCacheAddr;
+    core1Addr <= c1_dCacheAddr;
 	end if;
 end process cController_state;
 
@@ -92,19 +104,21 @@ cController_ns: process(CLK, nReset, state, prevState, c0ramAddr, c0ramData, c0r
 begin
   nextState <= state;
   nextPrevState <= prevState;
+  nextFetchWordC0Signal <= fetchWordC0Signal;
+  nextFetchWordC1Signal <= fetchWordC1Signal;
   case state is
     when IDLE =>
-      if((c0ramdMemRead = '1') and (prevState = CORE1_ACCESS))then
+      if((c0ramdMemRead = '1') and (prevState = CORE1_ACCESS) and (fetchWordC1Signal = '0'))then
         nextState <= SNOOP_IN_CORE1;
       elsif((c0ramdMemWrite = '1') and (prevState = CORE1_ACCESS))then
         nextState <= CORE0_ARBITER_WRITE;
-      elsif((c1ramdMemRead = '1') and (prevState = CORE0_ACCESS))then
+      elsif((c1ramdMemRead = '1') and (prevState = CORE0_ACCESS) and (fetchWordC0Signal = '0'))then
         nextState <= SNOOP_IN_CORE0;
       elsif((c1ramdMemWrite = '1') and (prevState = CORE0_ACCESS))then
         nextState <= CORE1_ARBITER_WRITE;
-      elsif((c0ramiMemRead = '1') and (prevState = CORE1_ACCESS))then
+      elsif((c0ramiMemRead = '1') and (prevState = CORE1_ACCESS) and (fetchWordC1Signal = '0'))then
         nextState <= CORE0_ARBITER_READ;
-      elsif((c1ramiMemRead = '1') and (prevState = CORE0_ACCESS))then
+      elsif((c1ramiMemRead = '1') and (prevState = CORE0_ACCESS) and (fetchWordC0Signal = '0'))then
         nextState <= CORE1_ARBITER_READ;
       else
         if(prevState <= CORE0_ACCESS) then
@@ -117,6 +131,7 @@ begin
     when SNOOP_IN_CORE0 =>
 --      if((c0_cocoFinishedSnooping = '1') and (c0_cocoSnoopHit)) and
       nextPrevState <= CORE1_ACCESS;
+      nextFetchWordC1Signal <= not fetchWordC1Signal;
       if(c0_cocoSnoopHit = '1') then
         nextState <= IDLE;
       else
@@ -125,6 +140,7 @@ begin
       
     when SNOOP_IN_CORE1 =>  
       nextPrevState <= CORE0_ACCESS;
+      nextFetchWordC0Signal <= not fetchWordC0Signal;
       if(c1_cocoSnoopHit = '1') then
         nextState <= IDLE;
       else 
@@ -198,11 +214,11 @@ end process cController_ns;
 
     -- Invalidation logic
     c1_invalidateAddr <= c0_dCacheAddr;
-    c1_invalidateAddrFlag <= '1' when ((c0_dCacheWrite = '1') and (c0ramdMemRead = '0') and (c0ramdMemWrite = '0'))  -- invalidate it in core1 if its a write hit in core0
+    c1_invalidateAddrFlag <= '1' when ((c0_dCacheWrite = '1') and (core0Addr /= c0_dCacheAddr))  -- invalidate it in core1 if its a write hit in core0
                              else '0';
     
     c0_invalidateAddr <= c1_dCacheAddr;
-    c0_invalidateAddrFlag <= '1' when ((c1_dCacheWrite = '1') and (c1ramdMemRead = '0') and (c1ramdMemWrite = '0'))  -- invalidate it in core0 if its a write hit in core1
+    c0_invalidateAddrFlag <= '1' when ((c1_dCacheWrite = '1') and (core1Addr /= c1_dCacheAddr))  -- invalidate it in core0 if its a write hit in core1
                              else '0';
     
 end arch_coherencyController;
