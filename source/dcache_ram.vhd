@@ -84,13 +84,13 @@ begin
   nextDirtyArray <= dirtyArray;
   if(nReset = '0') then
     nextDirtyArray <= dirtyArray;  
-  elsif((validArray(indexInteger) = '1') and (MEM_memWrite = '1')) then
-    nextDirtyArray(indexInteger) <= '1';
   elsif(invalidateAddrFlag = '1') then
 	  if(tagArray(invalidateAddrIndexInteger) = invalidateAddr(31 downto 7)) then
 		    nextDirtyArray(invalidateAddrIndexInteger) <= '0';  
 		end if;
-	end if;
+  elsif((validArray(indexInteger) = '1') and (MEM_memWrite = '1')) then
+    nextDirtyArray(indexInteger) <= '1';
+  end if;
 end process;
 
 nextSetArray <= (setArray(indexInteger)(63 downto 32) & InputWord) when (InputWordOffset = '1') else (InputWord & setArray(indexInteger)(31 downto 0));

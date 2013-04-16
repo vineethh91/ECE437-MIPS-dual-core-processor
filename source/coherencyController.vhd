@@ -215,10 +215,12 @@ end process cController_ns;
     -- Invalidation logic
     c1_invalidateAddr <= c0_dCacheAddr;
     c1_invalidateAddrFlag <= '1' when ((c0_dCacheWrite = '1') and (core0Addr /= c0_dCacheAddr))  -- invalidate it in core1 if its a write hit in core0
+                             --else '1' when ((state = SNOOP_IN_CORE1)  and (nextFetchWordC0Signal = '0') and (fetchWordC0Signal = '1'))
                              else '0';
     
     c0_invalidateAddr <= c1_dCacheAddr;
     c0_invalidateAddrFlag <= '1' when ((c1_dCacheWrite = '1') and (core1Addr /= c1_dCacheAddr))  -- invalidate it in core0 if its a write hit in core1
+                             --else '1' when ((state = SNOOP_IN_CORE0)  and (nextFetchWordC1Signal = '0') and (fetchWordC1Signal = '1'))
                              else '0';
     
 end arch_coherencyController;
